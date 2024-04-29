@@ -27,16 +27,6 @@ impl fmt::Display for SplineEventName {
     }
 }
 
-struct Target {
-    name: String,
-    id: String,
-}
-
-#[wasm_bindgen]
-pub struct SplineEvent {
-    target: Target,
-}
-
 #[wasm_bindgen(module = "/src/runtime.js")]
 extern "C" {
     pub type Application;
@@ -56,5 +46,8 @@ extern "C" {
     #[wasm_bindgen(method)]
     pub fn dispose(this: &Application);
 
-}
+    pub type SplineEvent;
 
+    #[wasm_bindgen(constructor)]
+    fn new() -> SplineEvent;
+}
