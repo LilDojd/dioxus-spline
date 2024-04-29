@@ -1,4 +1,5 @@
 #![allow(non_snake_case)]
+
 use dioxus::prelude::*;
 use dioxus_spline::Spline;
 use tracing::Level;
@@ -10,6 +11,11 @@ fn main() {
 
 pub fn App() -> Element {
     rsx! {
-        Spline { scene: String::from("https://prod.spline.design/PWOr9wT1pcAkbAA7/scene.splinecode") }
+        Spline {
+            scene: String::from("https://prod.spline.design/PWOr9wT1pcAkbAA7/scene.splinecode"),
+            on_mouse_down: |_| {
+                tracing::info!("Mouse down event");
+            },
+        }
     }
 }

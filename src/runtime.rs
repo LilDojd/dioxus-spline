@@ -1,6 +1,42 @@
+use core::fmt;
+
 use wasm_bindgen::prelude::*;
 use web_sys::js_sys;
 use web_sys::HtmlCanvasElement;
+
+#[allow(non_camel_case_types)]
+#[wasm_bindgen]
+#[derive(Clone, Copy, Debug)]
+pub enum SplineEventName {
+    mouseDown,
+    mouseUp,
+    mouseHover,
+    keyDown,
+    keyUp,
+    start,
+    lookAt,
+    follow,
+    scroll,
+    collision,
+    rendered,
+}
+
+impl fmt::Display for SplineEventName {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+struct Target {
+    name: String,
+    id: String,
+}
+
+#[wasm_bindgen]
+pub struct SplineEvent {
+    target: Target,
+}
+
 #[wasm_bindgen(module = "/src/runtime.js")]
 extern "C" {
     pub type Application;
@@ -12,12 +48,13 @@ extern "C" {
     pub fn load(this: &Application, scene: String);
 
     #[wasm_bindgen(method)]
-    pub fn add_event_listener(this: &Application, event_name: &str, callback: &js_sys::Function);
+    pub fn addEventListener(this: &Application, event_name: &str, callback: &js_sys::Function);
 
     #[wasm_bindgen(method)]
-    pub fn remove_event_listener(this: &Application, event_name: &str);
+    pub fn removeEventListener(this: &Application, event_name: &str);
 
     #[wasm_bindgen(method)]
     pub fn dispose(this: &Application);
 
 }
+

@@ -2,40 +2,74 @@
 
 use dioxus::prelude::*;
 
-use wasm_bindgen::prelude::JsCast;
 mod runtime;
-use runtime::Application;
+use runtime::{Application, SplineEvent, SplineEventName};
+use wasm_bindgen::{closure::Closure, JsCast};
 
 #[derive(Props, PartialEq, Clone)]
 pub struct SplineProps {
     #[props(into)]
     pub scene: String,
+    pub on_load: Option<EventHandler<Application>>,
+    pub on_mouse_down: Option<EventHandler<SplineEvent>>,
+    pub on_mouse_up: Option<EventHandler<SplineEvent>>,
+    pub on_mouse_hover: Option<EventHandler<SplineEvent>>,
+    pub on_key_down: Option<EventHandler<SplineEvent>>,
+    pub on_key_up: Option<EventHandler<SplineEvent>>,
+    pub on_start: Option<EventHandler<SplineEvent>>,
+    pub on_look_at: Option<EventHandler<SplineEvent>>,
+    pub on_follow: Option<EventHandler<SplineEvent>>,
+    pub on_wheel: Option<EventHandler<SplineEvent>>,
+    pub render_on_demand: Option<bool>,
 }
 
-fn get_canvas_element() -> Option<web_sys::HtmlCanvasElement> {
-    let window = web_sys::window()?;
-    let document = window.document()?;
-    let canvas_element = document.get_element_by_id("canvas3d")?;
-    let canvas = canvas_element
-        .dyn_into::<web_sys::HtmlCanvasElement>()
-        .ok()?;
-    Some(canvas)
+/// Utility to get the raw canvas element from its mounted data.
+fn get_raw_canvas_element(mounted: &MountedData) -> &web_sys::HtmlCanvasElement {
+    mounted
+        .downcast::<web_sys::Element>()
+        .unwrap()
+        .dyn_ref::<web_sys::HtmlCanvasElement>()
+        .unwrap()
 }
 
 #[component]
 pub fn Spline(props: SplineProps) -> Element {
-    tracing::info!("Entered Spline");
-
-    let mut canvas_element = use_signal(|| None::<web_sys::HtmlCanvasElement>);
+    let mut is_loading = use_signal(|| true);
 
     rsx!(canvas {
-        id: "canvas3d",
-        onmounted: move |_event| {
-            if let Some(canvas_ele) = get_canvas_element() {
-                let canvas_ref = canvas_element.get_or_insert(canvas_ele);
-                let spline = Application::new(&canvas_ref, true);
-                let props_clone = props.clone();
-                spline.load(props_clone.scene);
+        onmounted: move |event| {
+            let canvas_ref = get_raw_canvas_element(&event);
+            let render_on_demand = props.render_on_demand.unwrap_or(true);
+            let spline = Application::new(canvas_ref, render_on_demand);
+            let events = vec![
+                (SplineEventName::mouseDown, props.on_mouse_down),
+                (SplineEventName::mouseUp, props.on_mouse_up),
+                (SplineEventName::mouseHover, props.on_mouse_hover),
+                (SplineEventName::keyDown, props.on_key_down),
+                (SplineEventName::keyUp, props.on_key_up),
+                (SplineEventName::start, props.on_start),
+                (SplineEventName::lookAt, props.on_look_at),
+                (SplineEventName::follow, props.on_follow),
+                (SplineEventName::scroll, props.on_wheel),
+            ];
+            for (event_name, handler) in events {
+                if let Some(handler) = handler {
+                    let cb = Closure::wrap(
+                        Box::new(move |event| handler.call(event)) as Box<dyn FnMut(_)>
+                    );
+                    tracing::info!("Adding event listener for {:?}", event_name);
+                    spline.addEventListener(
+                        event_name.to_string().as_str(),
+                        cb.as_ref().unchecked_ref(),
+                    );
+                    cb.forget();
+                }
+            }
+            let props_clone = props.clone();
+            spline.load(props_clone.scene);
+            is_loading.set(false);
+            if let Some(on_load) = props.on_load {
+                on_load.call(spline)
             }
         }
     })

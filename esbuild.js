@@ -1,7 +1,7 @@
 import esbuild from 'esbuild';
 
 esbuild.build({
-  entryPoints: ['package.js'],
+  entryPoints: ['package.tsx'],
   bundle: true,
   outfile: 'src/runtime.js',
   format: 'esm',
