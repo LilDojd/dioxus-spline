@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "esbuild": "node esbuild.js"
+  },
+  "dependencies": {
+    "@splinetool/runtime": "^1.1.9"
+  },
+  "devDependencies": {
+    "esbuild": "^0.20.2"
+  },
+  "type": "module"
+}
