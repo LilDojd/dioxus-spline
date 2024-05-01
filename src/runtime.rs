@@ -1,11 +1,11 @@
 use core::fmt;
+use std::fmt::Debug;
 
 use wasm_bindgen::prelude::*;
 use web_sys::js_sys;
 use web_sys::HtmlCanvasElement;
 
 #[allow(non_camel_case_types)]
-#[wasm_bindgen]
 #[derive(Clone, Copy, Debug)]
 pub enum SplineEventName {
     mouseDown,
@@ -17,8 +17,6 @@ pub enum SplineEventName {
     lookAt,
     follow,
     scroll,
-    collision,
-    rendered,
 }
 
 impl fmt::Display for SplineEventName {
@@ -29,6 +27,7 @@ impl fmt::Display for SplineEventName {
 
 #[wasm_bindgen(module = "/src/runtime.js")]
 extern "C" {
+
     pub type Application;
 
     #[wasm_bindgen(constructor)]
@@ -46,8 +45,4 @@ extern "C" {
     #[wasm_bindgen(method)]
     pub fn dispose(this: &Application);
 
-    pub type SplineEvent;
-
-    #[wasm_bindgen(constructor)]
-    fn new() -> SplineEvent;
 }
