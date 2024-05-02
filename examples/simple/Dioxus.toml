@@ -1,0 +1,5 @@
+[application]
+name = "simple"
+
+[web.watcher]
+watch_path = ["src", "public", "../../src"]
