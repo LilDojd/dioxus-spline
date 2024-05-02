@@ -1,0 +1,51 @@
+[![](https://raw.githubusercontent.com/splinetool/react-spline/main/.github/screenshots/hero.png)](https://my.spline.design/splinereactlogocopycopy-eaa074bf6b2cc82d870c96e262a625ae/)
+
+# dioxus-spline
+
+**dioxus-spline** allows you to export and use Spline scenes directly in your Dioxus websites.
+
+🌈 [Spline](https://spline.design/) is a friendly 3d collaborative design tool for the web.
+
+[Website](https://spline.design/) &mdash;
+[Twitter](https://twitter.com/splinetool) &mdash;
+[Community](https://discord.gg/M9hNDMqvnw) &mdash;
+[Documentation](https://docs.spline.design/)
+
+## Usage
+
+### Basic:
+
+
+To use react-spline, first you have to go to the Spline editor, click on the **Export** button, select "**Code**" and then "**React**".
+
+You should see this:
+
+<img width="250" src="https://raw.githubusercontent.com/splinetool/react-spline/main/.github/screenshots/react-export-pane.png">
+
+You can copy the URL and pass it to the `Spline` component in Dioxus:
+
+```rust
+Spline {
+  scene: String::from("https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode") 
+}
+```
+You should be able to see the scene you exported in your Dioxus app.
+
+### Advanced
+
+You can also:
+1. Query Spline objects via `Application.findObjectByName` or `Application.findObjectById`.
+2. Attach event listeners to any `SplineEvent`
+3. Trigger Spline Events and modify Spline objects!
+
+Too see how, visit examples
+
+Some additional helpful info can be found in the documentation
+```bash
+cargo doc --open 
+```
+
+## Acknowledgements
+
+- Thanks to the Dioxus community, join their [discord](https://discord.gg/D6qNPSPn)!
+- Thanks to the contributors to [react-spline](https://github.com/splinetool/react-spline)
