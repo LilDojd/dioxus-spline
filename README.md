@@ -31,7 +31,9 @@ Spline {
   scene: String::from("https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode") 
 }
 ```
+
 You should be able to see the scene you exported in your Dioxus app.
+
 
 ### Advanced
 
