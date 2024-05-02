@@ -16,15 +16,17 @@
 ### Basic:
 
 
-To use react-spline, first you have to go to the Spline editor, click on the **Export** button, select "**Code**" and then "**React**".
+To use dioxus-spline, first you have to go to the Spline editor, click on the **Export** button, select "**Code**".
 
-You should see this:
+You should see something like this:
 
 <img width="250" src="https://raw.githubusercontent.com/splinetool/react-spline/main/.github/screenshots/react-export-pane.png">
 
 You can copy the URL and pass it to the `Spline` component in Dioxus:
 
 ```rust
+use dioxus-spline::Spline
+
 Spline {
   scene: String::from("https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode") 
 }
