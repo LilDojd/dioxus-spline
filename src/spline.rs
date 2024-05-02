@@ -31,6 +31,21 @@ fn get_raw_canvas_element(mounted: &MountedData) -> &web_sys::HtmlCanvasElement 
         .unwrap()
 }
 
+fn _event_factory(
+    props: &SplineProps,
+) -> Vec<(SplineEventName, Option<EventHandler<SplineEvent>>)> {
+    vec![
+        (SplineEventName::mouseDown, props.on_mouse_down),
+        (SplineEventName::mouseUp, props.on_mouse_up),
+        (SplineEventName::mouseHover, props.on_mouse_hover),
+        (SplineEventName::keyDown, props.on_key_down),
+        (SplineEventName::keyUp, props.on_key_up),
+        (SplineEventName::start, props.on_start),
+        (SplineEventName::lookAt, props.on_look_at),
+        (SplineEventName::follow, props.on_follow),
+        (SplineEventName::scroll, props.on_wheel),
+    ]
+}
 /// You can pass just the scene `String` to this component for simple renders. Alternatively,
 /// you can also attach event handlers to attributes defined in [SplineProps].
 /// If you would like to store SPEObject and modify it with events, you can use `use_signal` the following way:
@@ -69,51 +84,54 @@ fn get_raw_canvas_element(mounted: &MountedData) -> &web_sys::HtmlCanvasElement 
 ///   "Make helix chonky!"
 /// }
 /// ```
+/// **Notice the difference between on_click and onclick!**
 
 #[component]
 pub fn Spline(props: SplineProps) -> Element {
     let mut app = use_signal(|| None::<Application>);
-    let scene = use_signal(|| props.scene);
-    let load_scene = use_resource(move || async move {
-        app.unwrap().load(scene()).await;
-        let events = vec![
-            (SplineEventName::mouseDown, props.on_mouse_down),
-            (SplineEventName::mouseUp, props.on_mouse_up),
-            (SplineEventName::mouseHover, props.on_mouse_hover),
-            (SplineEventName::keyDown, props.on_key_down),
-            (SplineEventName::keyUp, props.on_key_up),
-            (SplineEventName::start, props.on_start),
-            (SplineEventName::lookAt, props.on_look_at),
-            (SplineEventName::follow, props.on_follow),
-            (SplineEventName::scroll, props.on_wheel),
-        ];
-        for (event_name, handler) in events {
-            if let Some(handler) = handler {
-                let cb = Closure::wrap(Box::new(move |event: JsValue| {
-                    let spline_event: SplineEvent = event.into();
-                    handler.call(spline_event);
-                }) as Box<dyn FnMut(JsValue)>);
-                tracing::info!("Adding event listener for {:?}", event_name);
-                app.unwrap()
-                    .addEventListener(event_name.to_string().as_str(), &cb);
-                // Leak cb for now
-                cb.forget();
+    let scene = use_signal(|| props.scene.clone());
+    let props_cloned = props.clone();
+
+    // Load scene and attach event listeners
+    let _ = use_resource(move || {
+        let events = _event_factory(&props_cloned);
+
+        async move {
+            app.unwrap().load(scene()).await;
+
+            for (event_name, handler) in events {
+                if let Some(handler) = handler {
+                    let cb = Closure::wrap(Box::new(move |event: JsValue| {
+                        let spline_event: SplineEvent = event.into();
+                        handler.call(spline_event);
+                    }) as Box<dyn FnMut(JsValue)>);
+                    tracing::info!("Adding event listener for {:?}", event_name);
+                    app.unwrap()
+                        .addEventListener(event_name.to_string().as_str(), &cb);
+                    // Leak cb for now
+                    cb.forget();
+                }
             }
-        }
-        if let Some(on_load) = props.on_load {
-            on_load.call(app.unwrap())
+            if let Some(on_load) = props_cloned.on_load {
+                on_load.call(app.unwrap())
+            }
         }
     });
 
-    rsx!(canvas {
-        onmounted: move |event: Event<MountedData>| {
-            let canvas_ref = get_raw_canvas_element(&event.data);
-            let render_on_demand = props.render_on_demand.unwrap_or(true);
-            app.get_or_insert(Application::new(canvas_ref, render_on_demand));
-            match &*load_scene.read_unchecked() {
-                Some(_) => tracing::info!("Loaded scene"),
-                None => tracing::info!("loading"),
+    rsx! {
+        canvas {
+            onmounted: move |event: Event<MountedData>| {
+                let canvas_ref = get_raw_canvas_element(&event.data);
+                let render_on_demand = props.render_on_demand.unwrap_or(true);
+                app.get_or_insert(Application::new(canvas_ref, render_on_demand));
             }
         }
-    })
+        // TODO: is_loading
+
+        // match &*load_scene.read_unchecked() {
+        //     Some(_) => rsx! {"Loaded"},
+        //     None => rsx! {"Loading"}
+        // }
+
+    }
 }
