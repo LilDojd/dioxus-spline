@@ -40,7 +40,7 @@ You can also:
 2. Attach event listeners to any `SplineEvent`
 3. Trigger Spline Events and modify Spline objects!
 
-Too see how, visit examples
+To see how, visit examples
 
 Some additional helpful info can be found in the documentation
 ```bash
