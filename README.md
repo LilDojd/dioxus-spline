@@ -47,10 +47,9 @@ You can also:
 
 To see how, visit examples
 
-Some additional helpful info can be found in the documentation
-```bash
-cargo doc --open 
-```
+Some additional helpful info can be found in the documentation:
+
+https://docs.rs/dioxus-spline/latest/dioxus_spline/
 
 ## Acknowledgements
 
