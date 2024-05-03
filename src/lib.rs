@@ -1,42 +1,41 @@
-#![allow(non_snake_case)]
+//! This crate provides a simple [dioxus] component for rendering [Spline] scenes in web.
+//! It also exposes interfaces to `SPEObject` and Spline `Application` from @splinetool/runtime.
+//! Currently, it is highly experimental and a lot of functionality is untested, but rendering
+//! Scenes and simple callbacks should work just fine!
+//!
+//! 🌈 Spline is a friendly 3d collaborative design tool for the web.
+//!
+//! [dioxus]: https://dioxuslabs.com/
+//! [Spline]: https://spline.design/
+//!
+//! # Usage
+//!
+//! First, add this to your Cdargo.toml
+//!
+//! ```toml
+//! [dependencies]
+//! dioxus-spline = "0.1.0"
+//! ```
+//!
+//! Next add the `Spline` component to your dioxus `App`:
+//!
+//! ```
+//! fn App() -> Element {
+//!     rsx! {
+//!         Spline { scene: String::from("https://prod.spline.design/PWOr9wT1pcAkbAA7/scene.splinecode") }
+//!     }
+//! }
+//! ```
+//!
+//! You should see your scene now!
 
-use dioxus::prelude::*;
+/// The runtime with `Application` and `SplineEvent`
+pub mod runtime;
+/// The wrapper around JS `SPEObject`
+pub mod speobject;
+/// The `Spline` component itself
+pub mod spline;
 
-use wasm_bindgen::prelude::JsCast;
-mod runtime;
-use runtime::Application;
-
-#[derive(Props, PartialEq, Clone)]
-pub struct SplineProps {
-    #[props(into)]
-    pub scene: String,
-}
-
-fn get_canvas_element() -> Option<web_sys::HtmlCanvasElement> {
-    let window = web_sys::window()?;
-    let document = window.document()?;
-    let canvas_element = document.get_element_by_id("canvas3d")?;
-    let canvas = canvas_element
-        .dyn_into::<web_sys::HtmlCanvasElement>()
-        .ok()?;
-    Some(canvas)
-}
-
-#[component]
-pub fn Spline(props: SplineProps) -> Element {
-    tracing::info!("Entered Spline");
-
-    let mut canvas_element = use_signal(|| None::<web_sys::HtmlCanvasElement>);
-
-    rsx!(canvas {
-        id: "canvas3d",
-        onmounted: move |_event| {
-            if let Some(canvas_ele) = get_canvas_element() {
-                let canvas_ref = canvas_element.get_or_insert(canvas_ele);
-                let spline = Application::new(&canvas_ref, true);
-                let props_clone = props.clone();
-                spline.load(props_clone.scene);
-            }
-        }
-    })
-}
+pub use runtime::{Application, SplineEvent, SplineEventName};
+pub use speobject::{SPEObject, SPEVector3};
+pub use spline::Spline;

@@ -1,0 +1,9 @@
+[application]
+name = "simple"
+out_dir = "docs"
+
+[web.watcher]
+watch_path = ["src", "public", "../../src"]
+
+[web.app]
+base_path = "https://github.com/LilDojd/dioxus-spline"

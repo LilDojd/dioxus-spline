@@ -3,7 +3,7 @@
     "esbuild": "node esbuild.js"
   },
   "dependencies": {
-    "@splinetool/runtime": "^1.1.9"
+    "@splinetool/runtime": "^1.2.4"
   },
   "devDependencies": {
     "esbuild": "^0.20.2"
