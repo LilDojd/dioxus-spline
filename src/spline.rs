@@ -92,7 +92,7 @@ pub fn Spline(props: SplineProps) -> Element {
     let scene = use_signal(|| props.scene.clone());
     let props_cloned = props.clone();
 
-    // Load scene and attach event listeners
+    // Load scene and attach events
     let _ = use_resource(move || {
         let events = _event_factory(&props_cloned);
 
