@@ -11,6 +11,7 @@ keywords = ["gui", "wasm", "web-programming", "dioxus"]
 license = "MIT OR Apache-2.0"
 readme = "README.md"
 repository = "https://github.com/LilDojd/dioxus-spline"
+exclude = [".github/"]
 
 [dependencies]
 dioxus = "0.5"
