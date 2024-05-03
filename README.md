@@ -42,10 +42,7 @@ You can also:
 2. Attach event listeners to any `SplineEvent`
 3. Trigger Spline Events and modify Spline objects!
 
-You can also:
-1. Query Spline objects via `Application.findObjectByName` or `Application.findObjectById`.
-
-To see how, visit examples
+To see how, visit examples and gh-page
 
 Some additional helpful info can be found in the documentation:
 
