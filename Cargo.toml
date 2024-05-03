@@ -1,6 +1,3 @@
-[workspace]
-members = ["examples/simple", "."]
-
 [package]
 name = "dioxus-spline"
 version = "0.1.0"
