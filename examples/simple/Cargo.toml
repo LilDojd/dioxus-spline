@@ -8,3 +8,6 @@ dioxus = { version = "0.5", features = ["web"] }
 dioxus-logger = "0.5.0"
 tracing = "0.1.9"
 dioxus-spline = "0.1.0"
+
+[web.app]
+base_path = "dioxus-spline"
