@@ -2,14 +2,14 @@
 
 use dioxus::prelude::*;
 
-use crate::runtime::{Application, SplineEvent, SplineEventName};
-use wasm_bindgen::{closure::Closure, JsCast, JsValue};
+use crate::runtime::{SplineApplication, SplineEvent, SplineEventName};
+use wasm_bindgen::{JsCast, JsValue};
 
 #[derive(Props, PartialEq, Clone)]
 pub struct SplineProps {
     #[props(into)]
     pub scene: String,
-    pub on_load: Option<EventHandler<Application>>,
+    pub on_load: Option<EventHandler<SplineApplication>>,
     pub on_mouse_down: Option<EventHandler<SplineEvent>>,
     pub on_mouse_up: Option<EventHandler<SplineEvent>>,
     pub on_mouse_hover: Option<EventHandler<SplineEvent>>,
@@ -88,7 +88,7 @@ fn _event_factory(
 
 #[component]
 pub fn Spline(props: SplineProps) -> Element {
-    let mut app = use_signal(|| None::<Application>);
+    let mut app = use_signal(|| None::<SplineApplication>);
     let scene = use_signal(|| props.scene.clone());
     let props_cloned = props.clone();
 
@@ -101,15 +101,14 @@ pub fn Spline(props: SplineProps) -> Element {
 
             for (event_name, handler) in events {
                 if let Some(handler) = handler {
-                    let cb = Closure::wrap(Box::new(move |event: JsValue| {
-                        let spline_event: SplineEvent = event.into();
-                        handler.call(spline_event);
-                    }) as Box<dyn FnMut(JsValue)>);
+                    let cb = move |event: JsValue| {
+                        let event: SplineEvent = event.into();
+                        handler.call(event);
+                    };
+
                     tracing::info!("Adding event listener for {:?}", event_name);
                     app.unwrap()
-                        .addEventListener(event_name.to_string().as_str(), &cb);
-                    // Leak cb for now
-                    cb.forget();
+                        .add_event_listener(event_name.to_string().as_str(), cb);
                 }
             }
             if let Some(on_load) = props_cloned.on_load {
@@ -123,7 +122,7 @@ pub fn Spline(props: SplineProps) -> Element {
             onmounted: move |event: Event<MountedData>| {
                 let canvas_ref = get_raw_canvas_element(&event.data);
                 let render_on_demand = props.render_on_demand.unwrap_or(true);
-                app.get_or_insert(Application::new(canvas_ref, render_on_demand));
+                app.get_or_insert(SplineApplication::new(canvas_ref, render_on_demand));
             }
         }
         // TODO: is_loading
