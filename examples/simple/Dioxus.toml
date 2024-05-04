@@ -4,6 +4,6 @@ name = "simple"
 [web.watcher]
 watch_path = ["src", "public", "../../src"]
 
-# [web.app]
-# base_path = "dioxus-spline"
-# title = "Dioxus Spline Demo"
+[web.app]
+base_path = "dioxus-spline"
+title = "Dioxus Spline Demo"
