@@ -38,7 +38,7 @@ You should be able to see the scene you exported in your Dioxus app.
 ### Advanced
 
 You can also:
-1. Query Spline objects via `Application.findObjectByName` or `Application.findObjectById`.
+1. Query Spline objects via `SplineApplication.find_object_by_name` or `SplineApplication.find_object_by_id`.
 2. Attach event listeners to any `SplineEvent`
 3. Trigger Spline Events and modify Spline objects!
 
