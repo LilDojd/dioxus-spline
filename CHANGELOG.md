@@ -1,3 +1,9 @@
+## v0.2.1 (2024-05-04)
+
+### Fix
+
+- **version**: Set correct version
+
 ## v0.2.0 (2024-05-04)
 
 ### BREAKING CHANGE
