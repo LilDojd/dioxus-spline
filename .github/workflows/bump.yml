@@ -20,7 +20,7 @@ jobs:
     needs:
       - ci
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           # Fetch all commits.
           fetch-depth: 0
