@@ -14,8 +14,7 @@ impl SPEObject {
     /// # Example
     ///
     /// ```
-    /// let obj = event.findObjectByName(String::from("Helix 2"));
-    /// let speobj = SPEObject::new(obj);
+    /// let speobj = event.find_object_by_name(String::from("Helix 2"));
     /// ```
     pub fn new(obj: JsValue) -> SPEObject {
         SPEObject { inner: obj }
