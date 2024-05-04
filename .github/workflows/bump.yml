@@ -1,0 +1,36 @@
+name: Bump
+
+on:
+  # This job triggers as a manual action from the Actions tab.
+  workflow_dispatch:
+
+jobs:
+  # Include the CI job to ensure that what we are releasing is in a working condition. This requires
+  # on.workflow_call to be set in the Action we are including.
+  ci:
+    uses: ./.github/workflows/ci.yml
+
+  bump:
+    runs-on: ubuntu-latest
+    needs:
+      - ci
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          # Fetch all commits.
+          fetch-depth: 0
+          # Circumvent GitHub's successive workflow trigger restrictions.
+          ssh-key: "${{ secrets.BUMP_SSH_KEY }}"
+      - run: pip3 install -U Commitizen
+        # Configure the author of the commit that bumps the version.
+      - run: git config --local user.email "github-actions@users.noreply.github.com"
+      - run: git config --local user.name "github-actions"
+      - name: Get new version
+        run: echo "NEW_VERSION=$(cz bump --dry-run | grep -Po 'v\K([0-9]+(\.[0-9]+)+)')" >> $GITHUB_ENV
+      - name: Update Cargo.toml
+        run: sed -i 's/^version =.\+$/version = "${{ env.NEW_VERSION }}"/' Cargo.toml
+        # Perform the actual bump: update the changelog and commit the changes.
+      - run: cz bump --changelog
+        # Push the commit and tag back to the repository.
+      - run: git push
+      - run: git push --tags
