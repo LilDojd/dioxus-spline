@@ -30,7 +30,7 @@ jobs:
       - run: git config --local user.email "github-actions@users.noreply.github.com"
       - run: git config --local user.name "github-actions"
       - name: Get new version
-        run: echo "NEW_VERSION=$(cz bump --dry-run | grep -Po 'v\K([0-9]+(\.[0-9]+)+)')" >> $GITHUB_ENV
+        run: echo "NEW_VERSION=$(cz bump ${{ inputs.manual_version }} --dry-run | grep -Po 'v\K([0-9]+(\.[0-9]+)+)')" >> $GITHUB_ENV
       - name: Update Cargo.toml
         run: sed -i 's/^version =.\+$/version = "${{ env.NEW_VERSION }}"/' Cargo.toml
         # Perform the actual bump: update the changelog and commit the changes.
