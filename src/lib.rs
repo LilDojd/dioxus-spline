@@ -36,6 +36,6 @@ pub mod speobject;
 /// The `Spline` component itself
 pub mod spline;
 
-pub use runtime::{Application, SplineEvent, SplineEventName};
+pub use runtime::{SplineApplication, SplineEvent, SplineEventName};
 pub use speobject::{SPEObject, SPEVector3};
 pub use spline::Spline;
