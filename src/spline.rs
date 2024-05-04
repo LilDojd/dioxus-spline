@@ -1,5 +1,3 @@
-#![allow(non_snake_case)]
-
 use dioxus::prelude::*;
 
 use crate::runtime::{SplineApplication, SplineEvent, SplineEventName};
@@ -54,15 +52,14 @@ fn _event_factory(
 ///
 /// *In the component*
 /// ```
-/// let mut splineobject = use_signal(|| None::<SPEObject>);
+/// let mut app = use_signal(|| None::<SplineApplication>);
 ///
 /// rsx! {
 ///     Spline {
 ///         scene: String::from("my-awesome-scene.splinecode")
-///         on_load: move |event: Application| {
-///             let obj = event.findObjectByName(String::from("Cube"));
-///             // Store SPEObject
-///             splineobject.write().insert(SPEObject::new(obj));
+///         on_load: move |event: SplineApplication| {
+///             // Store app
+///             app.set(Some(event));
 ///         }
 ///     }
 /// }
@@ -76,12 +73,10 @@ fn _event_factory(
 /// ```
 /// button {
 ///   onclick: move |_| {
-///        let mut spe_object = splineobject.unwrap();
-///        let mut new_scale = spe_object.scale();
-///        new_scale += SPEVector3::new(0.5, 0.5, 0.5);
-///        spe_object.set_scale(&new_scale);
+///        let mut spe_object = app.unwrap().find_object_by_name(String::from("Cube"));
+///        spe_object.scale.x *= 2;
 ///    },
-///   "Make helix chonky!"
+///   "Make cube chonky!"
 /// }
 /// ```
 /// **Notice the difference between on_click and onclick!**
@@ -91,7 +86,7 @@ pub fn Spline(props: SplineProps) -> Element {
     let mut app = use_signal(|| None::<SplineApplication>);
     let scene = use_signal(|| props.scene.clone());
     let props_cloned = props.clone();
-
+    let mut is_loading = use_signal(|| true);
     // Load scene and attach events
     let _ = use_resource(move || {
         let events = _event_factory(&props_cloned);
@@ -99,6 +94,7 @@ pub fn Spline(props: SplineProps) -> Element {
         async move {
             app.unwrap().load(scene()).await;
 
+            is_loading.set(false);
             for (event_name, handler) in events {
                 if let Some(handler) = handler {
                     let cb = move |event: JsValue| {
@@ -123,14 +119,11 @@ pub fn Spline(props: SplineProps) -> Element {
                 let canvas_ref = get_raw_canvas_element(&event.data);
                 let render_on_demand = props.render_on_demand.unwrap_or(true);
                 app.set(Some(SplineApplication::new(canvas_ref, render_on_demand)));
+            },
+            style: match is_loading() {
+                true => "display: none;",
+                false => "display: block; width: 100%; height: 100%;",
             }
         }
-        // TODO: is_loading
-
-        // match &*load_scene.read_unchecked() {
-        //     Some(_) => rsx! {"Loaded"},
-        //     None => rsx! {"Loading"}
-        // }
-
     }
 }

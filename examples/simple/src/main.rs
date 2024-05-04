@@ -18,7 +18,6 @@ pub fn App() -> Element {
             Spline {
                 scene: String::from("https://prod.spline.design/PWOr9wT1pcAkbAA7/scene.splinecode"),
                 on_load: move |event: SplineApplication| {
-                    // Set app
                     app.set(Some(event));
                 },
                 on_mouse_down: move |event: SplineEvent| {
@@ -41,12 +40,11 @@ pub fn App() -> Element {
                 splineobject.scale.x *= 1.5;
                 splineobject.scale.y *= 1.5;
                 splineobject.scale.z *= 1.5;
-
                 tracing::info!("{splineobject:?}");
             },
             "Make helix chonky!"
         }
         h1 { "Received {number_events_received} Spline events. (Click on blue helix/hover over text)" }
-        p { "Most recent target: {target} "}
+        p { "Most recent target: {target} " }
     }
 }
