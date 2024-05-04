@@ -24,8 +24,6 @@ jobs:
         with:
           # Fetch all commits.
           fetch-depth: 0
-          # Circumvent GitHub's successive workflow trigger restrictions.
-          ssh-key: "${{ secrets.BUMP_SSH_KEY }}"
       - run: pip3 install -U Commitizen
         # Configure the author of the commit that bumps the version.
       - run: git config --local user.email "github-actions@users.noreply.github.com"
