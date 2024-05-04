@@ -14,7 +14,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! dioxus-spline = "0.1.0"
+//! dioxus-spline = "0.2.0"
 //! ```
 //!
 //! Next add the `Spline` component to your dioxus `App`:
@@ -37,5 +37,5 @@ pub mod speobject;
 pub mod spline;
 
 pub use runtime::{SplineApplication, SplineEvent, SplineEventName};
-pub use speobject::{SPEObject, SPEVector3};
+pub use speobject::SPEObject;
 pub use spline::Spline;
