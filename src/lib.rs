@@ -29,7 +29,7 @@
 //!
 //! You should see your scene now!
 
-/// The runtime with `Application` and `SplineEvent`
+/// The runtime with `SplineApplication` and `SplineEvent`
 pub mod runtime;
 /// The wrapper around JS `SPEObject`
 pub mod speobject;

@@ -1,6 +1,7 @@
 use core::fmt;
 use std::fmt::Debug;
 
+use crate::speobject::SPEObject;
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsValue;
@@ -178,16 +179,19 @@ impl SplineApplication {
         self.app.dispose_();
     }
 
-    pub fn find_object_by_name(&self, name: String) -> JsValue {
-        self.app.find_object_by_name_(name)
+    pub fn find_object_by_name(&self, name: String) -> SPEObject {
+        let obj = self.app.find_object_by_name_(name);
+        SPEObject::new(obj)
     }
 
-    pub fn find_object_by_id(&self, id: String) -> JsValue {
-        self.app.find_object_by_id_(id)
+    pub fn find_object_by_id(&self, id: String) -> SPEObject {
+        let obj = self.app.find_object_by_id_(id);
+        SPEObject::new(obj)
     }
 
-    pub fn get_all_objects(&self) -> Vec<JsValue> {
-        self.app.get_all_objects_()
+    pub fn get_all_objects(&self) -> Vec<SPEObject> {
+        let objs = self.app.get_all_objects_();
+        objs.iter().map(|obj| SPEObject::new(obj.clone())).collect()
     }
 
     #[deprecated(note = "Experimental")]
@@ -271,9 +275,5 @@ impl SplineApplication {
     #[deprecated(note = "Experimental")]
     pub fn get_variable(&self, name: String) -> JsValue {
         self.app.get_variable_(name)
-    }
-
-    pub fn get_app(&self) -> &Application {
-        &self.app
     }
 }
