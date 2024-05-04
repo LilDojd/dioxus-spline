@@ -122,7 +122,7 @@ pub fn Spline(props: SplineProps) -> Element {
             onmounted: move |event: Event<MountedData>| {
                 let canvas_ref = get_raw_canvas_element(&event.data);
                 let render_on_demand = props.render_on_demand.unwrap_or(true);
-                app.get_or_insert(SplineApplication::new(canvas_ref, render_on_demand));
+                app.set(Some(SplineApplication::new(canvas_ref, render_on_demand)));
             }
         }
         // TODO: is_loading

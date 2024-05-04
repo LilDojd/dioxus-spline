@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use dioxus::prelude::*;
-use dioxus_spline::{SPEObject, SPEVector3, Spline, SplineApplication, SplineEvent};
+use dioxus_spline::{Spline, SplineApplication, SplineEvent};
 use tracing::Level;
 
 fn main() {
@@ -10,7 +10,7 @@ fn main() {
 }
 
 pub fn App() -> Element {
-    let mut splineobject = use_signal(|| None::<SPEObject>);
+    let mut app = use_signal(|| None::<SplineApplication>);
     let mut number_events_received = use_signal(|| 0);
     let mut target = use_signal(|| String::from("None"));
     rsx! {
@@ -18,10 +18,8 @@ pub fn App() -> Element {
             Spline {
                 scene: String::from("https://prod.spline.design/PWOr9wT1pcAkbAA7/scene.splinecode"),
                 on_load: move |event: SplineApplication| {
-                    let _ = splineobject.write().insert(event.find_object_by_name(String::from("Helix 2")));
-                    let all_objs = event.get_all_objects();
-                    tracing::info!("object: {splineobject:?}");
-                    tracing::info!("All objects: {all_objs:?}");
+                    // Set app
+                    app.set(Some(event));
                 },
                 on_mouse_down: move |event: SplineEvent| {
                     tracing::info!("Recieved {event:?}");
@@ -39,10 +37,12 @@ pub fn App() -> Element {
         }
         button {
             onclick: move |_| {
-                let mut spe_object = splineobject.unwrap();
-                let mut new_scale = spe_object.scale();
-                new_scale += SPEVector3::new(0.5, 0.5, 0.5);
-                spe_object.set_scale(&new_scale);
+                let mut splineobject = app.unwrap().find_object_by_name(String::from("Helix 2"));
+                splineobject.scale.x *= 1.5;
+                splineobject.scale.y *= 1.5;
+                splineobject.scale.z *= 1.5;
+
+                tracing::info!("{splineobject:?}");
             },
             "Make helix chonky!"
         }
