@@ -3,6 +3,11 @@ name: Bump
 on:
   # This job triggers as a manual action from the Actions tab.
   workflow_dispatch:
+    inputs:
+      manual_version:
+        description: "Set bump version manually"
+        required: false
+        default: ""
 
 jobs:
   # Include the CI job to ensure that what we are releasing is in a working condition. This requires
