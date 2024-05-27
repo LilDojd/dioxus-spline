@@ -1,3 +1,11 @@
+## v0.2.2 (2024-05-27)
+
+### Fix
+
+- **deps**: update dependency @splinetool/runtime to v1.4.1
+- **deps**: update rust crate serde to v1.0.203
+- **deps**: update rust crate dioxus-logger to v0.5.1
+
 ## v0.2.1 (2024-05-04)
 
 ### Fix
