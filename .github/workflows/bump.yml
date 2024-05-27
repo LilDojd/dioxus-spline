@@ -32,7 +32,7 @@ jobs:
       - name: Get new version
         run: echo "NEW_VERSION=$(cz bump ${{ inputs.manual_version }} --dry-run | grep -Po 'v\K([0-9]+(\.[0-9]+)+)')" >> $GITHUB_ENV
       - name: Update Cargo.toml
-        run: sed -i 's/^version =.\+$/version = "${{ env.NEW_VERSION }}"/' Cargo.toml
+        run: sed -i 's/^version =.\+$/version = "${{ env.NEW_VERSION }}"/' Cargo.toml && sed -i 's/dioxus-spline = ".*"/dioxus-spline = "${{ env.NEW_VERSION }}"/' examples/simple/Cargo.toml
         # Perform the actual bump: update the changelog and commit the changes.
       - run: cz bump ${{ inputs.manual_version }} --changelog
         # Push the commit and tag back to the repository.
