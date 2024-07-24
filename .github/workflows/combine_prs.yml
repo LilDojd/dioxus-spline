@@ -21,3 +21,4 @@ jobs:
         uses: github/combine-prs@v5.0.0
         with:
           labels: combined-pr # Optional: add a label to the combined PR
+          branch_prefix: renovate
