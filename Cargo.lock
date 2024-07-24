@@ -381,9 +381,9 @@ dependencies = [
 
 [[package]]
 name = "dioxus-signals"
-version = "0.5.6"
+version = "0.5.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4bc3915d8e2cb8f095ec193efd1dbf0896cd79bf7d266c69926701883e63b84e"
+checksum = "7e3e224cd3d3713f159f0199fc088c292a0f4adb94996b48120157f6a8f8342d"
 dependencies = [
  "dioxus-core",
  "futures-channel",
@@ -401,6 +401,7 @@ version = "0.2.2"
 dependencies = [
  "dioxus",
  "dioxus-logger",
+ "dioxus-signals",
  "js-sys",
  "serde",
  "serde-wasm-bindgen",
