@@ -26,7 +26,7 @@ jobs:
         run: cd examples/simple && dx build --release && cp ./dist/index.html ./dist/404.html
   
       - name: Deploy Project 🚀
-        uses: JamesIves/github-pages-deploy-action@v4.6.3
+        uses: JamesIves/github-pages-deploy-action@v4.6.7
         with:
           branch: gh-pages
           folder: examples/simple/dist
