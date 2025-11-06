@@ -11,7 +11,7 @@ repository = "https://github.com/LilDojd/dioxus-spline"
 exclude = [".github/"]
 
 [dependencies]
-dioxus = "0.5.6"
+dioxus = "0.7.0"
 dioxus-logger = "0.5.0"
 dioxus-signals = "0.5.7"
 tracing = "0.1.40"
